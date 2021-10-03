@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from "styled-components";
-// import { TwitterOutlined, HomeOutlined } from "@ant-design/icons";
 import { FaTwitter } from "react-icons/fa";
 import { GiBirdHouse } from "react-icons/gi";
 import { BiHash, BiBell, BiBookmark, BiUser } from "react-icons/bi";
@@ -182,8 +181,8 @@ const Menu = () => {
                 </div>
 
                 <div className="username">
-                    <div>Martin</div>
-                    <div>@Martin7teen</div>
+                    <div>John</div>
+                    <div>@John1224</div>
                 </div>
 
                 <div className="dots">

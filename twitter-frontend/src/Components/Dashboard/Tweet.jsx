@@ -1,81 +1,107 @@
 import React from 'react';
 import styled from "styled-components";
+import { BiUser } from 'react-icons/bi';
 import { AiOutlineGif, AiOutlineCalendar } from 'react-icons/ai';
 import { IoImageOutline } from "react-icons/io5";
 import { CgPoll } from "react-icons/cg";
 import { BiSmile } from "react-icons/bi";
+// import io from "socket.io-client";
+import axios from "axios";
 
 const Container = styled.div`
+    border-bottom: 0.1px solid gray;
+    padding: 3%;
+    display: grid;
+    grid-template-columns: 50px auto;
 
-    & > .tweet {
-        border: none;
-        outline: none;
-        resize: vertical;
-        background-color: transparent;
-        font-family: sans-serif;
-        font-size: 1em;
-        color: white;
-        width: 100%;
-        padding: 1%;
-        overflow: hidden;
-        border-bottom: 0.1px solid #00b7ff;
+    & > .avatar {
+        display: flex;
+        justify-content: center;
+        
+        & > .icon {
+            font-size: 2em;
+            border-radius: 50%;
+            padding: 5%;
+            background-color: gray;
+        }
     }
 
-    & > .count {
-        font-size: 0.8em;
-        text-align: right;
-        color: #8d8d8d;
-    }
+    & > .tweetCont {
 
-    & > .orange {
-        color: orange;
-    }
-
-    & > .red {
-        color: red;
-    }
-
-    & > .tweetOptions {
-        padding: 1%;
-        display: grid;
-        grid-template-columns: 40% auto;
-        align-items: center;
-
-        & > .tweetMedia {
-            display: flex;
-            justify-content: start;
-
-            & > .icon {
-                color: #00b7ff;
-                font-size: 25px;
-                height: 25px;
-                padding: 3%;
-                cursor: pointer;
-
-                :hover {
-                    background-color: #1f1f1f;
-                    border-radius: 50%;
-                }
+        & > .tweet {
+            border: none;
+            outline: none;
+            resize: vertical;
+            background-color: transparent;
+            font-family: sans-serif;
+            font-size: 1em;
+            color: white;
+            width: 100%;
+            padding: 1%;
+            overflow: hidden;
+            border-bottom: 1px solid gray;
+            
+            :focus {
+                border-bottom: 1px solid #00b7ff;
             }
         }
 
-        & > .tweetSendBtn {
+        & > .count {
+            font-size: 0.8em;
             text-align: right;
+            color: #8d8d8d;
+        }
 
-            & > button {
-                width: fit-content;
-                padding: 3% 10%;
-                font-size: 1.1em;
-                font-weight: 600;
-                border-radius: 25px;
-                border: none;
-                outline: none;
-                background-color: #00b7ff;
-                color: white;
+        & > .orange {
+            color: orange;
+        }
 
-                :hover {
+        & > .red {
+            color: red;
+        }
+
+        & > .tweetOptions {
+            padding: 1%;
+            display: grid;
+            grid-template-columns: 40% auto;
+            align-items: center;
+
+            & > .tweetMedia {
+                display: flex;
+                justify-content: start;
+
+                & > .icon {
+                    color: #00b7ff;
+                    font-size: 25px;
+                    height: 25px;
+                    padding: 3%;
                     cursor: pointer;
-                    filter: contrast(70%);
+
+                    :hover {
+                        background-color: #1f1f1f;
+                        border-radius: 50%;
+                    }
+                }
+            }
+
+            & > .tweetSendBtn {
+                text-align: right;
+
+                & > button {
+                    width: fit-content;
+                    padding: 3% 10%;
+                    font-size: 1.1em;
+                    font-weight: 600;
+                    border-radius: 25px;
+                    border: none;
+                    outline: none;
+                    background-color: #00b7ff;
+                    color: white;
+
+                    :hover {
+                        cursor: pointer;
+                        filter: contrast(70%);
+                    }
                 }
             }
         }
@@ -84,6 +110,9 @@ const Container = styled.div`
 
 
 const Tweet = () => {
+
+    // const socket = io("http://localhost:5000");
+
     const tweetLimit = 140;
     const [tweet, setTweet] = React.useState("");
     const [count, setCount] = React.useState(tweetLimit);
@@ -118,34 +147,69 @@ const Tweet = () => {
             setRows(rows + 1);
         }
     }
+    
+    const postTweet = () => {
+
+        if (tweet.trim().length === 0) {
+            return;
+        }
+
+        axios.post(``)
+            .then (result => {
+                console.log(result);
+            })
+            .catch (error => {
+                console.log(error);
+            })
+
+        // socket.on(
+        //     "new-posts", (posts) => {
+            //   if (id.current !== editorId) {
+            //     remote.current = true;
+            //     JSON.parse(ops).forEach((op: any) =>
+            //       editor.current!.applyOperation(op)
+            //     );
+            //     remote.current = false;
+            //   }
+        //     }
+        // );
+    }
 
     return (
         <Container>
 
-            {/* Tweet text */}
-            <textarea rows={rows} className="tweet" placeholder="What's happening?" value={tweet} onChange={e => tweetChange(e.target.value)} onKeyPress={e => growTextarea(e)} autoFocus />
-
-            {/* Counter shows remaining count of characters in the tweet */}
-            <div className={count > 20 ? "count" : count > 5 ? "count orange" : "count red"}>
-                {count} characters left
+            <div className="avatar">
+                <BiUser className="icon" />
             </div>
 
-            {/* Static tweet options */}
-            <div className="tweetOptions">
+            <div className="tweetCont">
 
-                <div className="tweetMedia">
-                    <IoImageOutline className="icon" />
-                    <AiOutlineGif className="icon border" />
-                    <CgPoll className="icon" />
-                    <BiSmile className="icon" />
-                    <AiOutlineCalendar className="icon" />
+                {/* Tweet text */}
+                <textarea rows={rows} className="tweet" placeholder="What's happening?" value={tweet} onChange={e => tweetChange(e.target.value)} onKeyPress={e => growTextarea(e)} autoFocus />
+
+                {/* Counter shows remaining count of characters in the tweet */}
+                <div className={count > 20 ? "count" : count > 5 ? "count orange" : "count red"}>
+                    {count} characters left
                 </div>
 
-                {/* Sends the tweet */}
-                <div className="tweetSendBtn">
-                    <button>Tweet</button>
+                {/* Static tweet options */}
+                <div className="tweetOptions">
+
+                    <div className="tweetMedia">
+                        <IoImageOutline className="icon" />
+                        <AiOutlineGif className="icon border" />
+                        <CgPoll className="icon" />
+                        <BiSmile className="icon" />
+                        <AiOutlineCalendar className="icon" />
+                    </div>
+
+                    {/* Sends the tweet */}
+                    <div className="tweetSendBtn">
+                        <button onClick={postTweet}>Tweet</button>
+                    </div>
+                    
                 </div>
-                
+
             </div>
 
         </Container>
